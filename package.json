@@ -1,0 +1,30 @@
+{
+  "name": "learn-socket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.2.5",
+    "socket.io": "^3.0.4",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
