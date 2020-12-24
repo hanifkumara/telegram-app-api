@@ -38,6 +38,7 @@ io.on('connection', (socket) => {
 })
 
 app.use('/api/v1', router)
+app.use('/upload', express.static('./image'))
 
 app.get('/', (req, res) => {
   res.json({
