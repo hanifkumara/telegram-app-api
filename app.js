@@ -10,6 +10,9 @@ const socket = require('socket.io')
 const router = require('./src/router/index')
 const bodyParser = require('body-parser')
 const { response } = require('./src/helpers/response')
+const { modelAddMessage } = require('./src/models/message')
+const { v4: uuidv4 } = require('uuid')
+const moment = require('moment')
 
 app.use(cors())
 
@@ -27,11 +30,35 @@ const io = socket(server, {
 
 io.on('connection', (socket) => {
   console.log(`Assalamualaikum boyy ${socket.id}`)
-  socket.on('salam', data => {
-    console.log(data)
-    socket.broadcast.emit('kirimKembali', data)
+  socket.on('afterLogin', dataUser => {
+    console.log(dataUser)
+    socket.join('room :' + dataUser.room)
+    socket.broadcast.to('room :' + dataUser.room).emit('sendBack', `BOT : user ${dataUser.username} join to ${dataUser.room} group`)
   })
-
+  socket.on('message', data => {
+    console.log('Ini on', data)
+    io.to('room :' + data.room).emit('sendBack', data.message)
+  })
+  
+  socket.on('initialUser', (dataUser) => {
+    socket.join(['chat:' + dataUser.idSender + '' + dataUser.idReceiver, 'chat:' + '' + dataUser.idReceiver + dataUser.idSender])
+    console.log('ini initial user', dataUser)
+  })
+  socket.on('messagePrivate', data => {
+    data.status = 'sender'
+    socket.broadcast.to(`chat:${data.idSender}${data.idReceiver}`).to(`chat:${data.idReceiver}${data.idSender}`).emit('sendBack', data)
+    delete data.status
+    socket.emit('sendBack', data)
+    const id = uuidv4()
+    const dataMessage = {
+      id,
+      idSender: data.idReceiver,
+      idReceiver: data.idSender,
+      message: data.message,
+      createdAt: moment(new Date()).format('LT')
+    }
+    modelAddMessage(dataMessage)
+  })
   socket.on('disconnect', ()=>{
     console.log('client terputus')
   })

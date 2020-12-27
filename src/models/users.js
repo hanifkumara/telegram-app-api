@@ -12,7 +12,6 @@ exports.modelAllUsers = () => {
     })
   })
 }
-
 exports.modelListUsers = (id, name) => {
   return new Promise((resolve, reject) => {
     if (id, name) {
@@ -34,11 +33,32 @@ exports.modelListUsers = (id, name) => {
     }
   })
 }
-
+exports.modelIdUser = (id) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`SELECT * FROM users WHERE id = '${id}'`, (error, result) => {
+      if (!error) {
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}
+exports.modelMyProfile = (id) => {
+  return new Promise((resolve, reject) => {
+    console.log('ini id', id)
+    connection.query(`SELECT * FROM users WHERE id = '${id}'`, (error, result) => {
+      if (!error) {
+        console.log('ini hasilnya', result)
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}
 exports.modelUpdateProfile = (id, data) => {
   return new Promise((resolve, reject) => {
-    console.log('ini id di model', id)
-    console.log('ini data di model', data)
     connection.query('UPDATE users SET ? WHERE id = ?',[data, id], (error, result) => {
       if(!error) {
         resolve(result)

@@ -29,6 +29,9 @@ exports.addMessage = (req, res, next) => {
 exports.getChatPrivate = (req, res, next) => {
   const {myId} = req
   const {idReceiver} = req.body
+  const {test} = req.body
+  console.log('test aja', test)
+  console.log('idReceiver', idReceiver)
   modelChatPrivate(myId, idReceiver)
     .then((result) => {
       console.log('ini result di controller', result)

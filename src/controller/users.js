@@ -1,6 +1,6 @@
 const { response } = require('../helpers/response')
 const createError = require('http-errors')
-const { modelAllUsers, modelListUsers, modelUpdateProfile} = require('../models/users')
+const { modelAllUsers, modelListUsers, modelUpdateProfile, modelIdUser, modelMyProfile} = require('../models/users')
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 
@@ -26,29 +26,48 @@ exports.listUsers = (req, res, next) => {
       return next(error)
     })
 }
-
+exports.getIdUser = (req, res, next) => {
+  const {id} = req.params
+  modelIdUser(id)
+    .then((result) => {
+      return response(res, 200, result, null)
+    })
+    .catch(() => {
+      const error = createError.InternalServerError()
+      return next(error)
+    })
+}
+exports.getMyProfile = (req, res, next) => {
+  const {myId} = req
+  modelMyProfile(myId)
+    .then(result => {
+      return response(res, 200, result, null)
+    })
+    .catch(() => {
+      const error = createError.internalServerError()
+      return next(error)
+    })
+}
 exports.updateProfile = (req, res, next) => {
   const {myId} = req
-  const {name, phone, biodata, password} = req.body
+  const {username, phoneNumber, biodata, password} = req.body
   const data = {}
   if (req.file) {
     data.photo = `${process.env.BASE_URL}/upload/${req.file.filename}`;
   }
-	if (name) {
-		data.name = req.body.name;
+	if (username) {
+		data.username = `@${req.body.username}`;
 	}
-	if (phone) {
-		data.phone = req.body.phone;
+	if (phoneNumber) {
+		data.phoneNumber = req.body.phoneNumber;
 	}
 	if (biodata) {
 		data.biodata = req.body.biodata;
 	}
 	if (!password) {
     delete data.password;
-    console.log(data)
 		modelUpdateProfile(myId, data)
 			.then((result) => {
-        console.log(result)
 				delete data.password;
 				response(res, 200, {data, message: 'Update success'}, null);
 			})
@@ -62,7 +81,6 @@ exports.updateProfile = (req, res, next) => {
         data.password = hash;
         modelUpdateProfile(myId, data)
           .then((result) => {
-            console.log(result)
             delete data.password;
             response(res, 200, { data, message: 'Update success' }, null);
           })
