@@ -8,14 +8,14 @@ exports.addMessage = (req, res, next) => {
   const {myId} = req
   const {message, idReceiver} = req.body
   const id = uuidv4()
-
   const data = {
     id,
     idSender: myId,
     idReceiver,
     message, 
-    createdAt: moment(new Date()).format('LT')
+    momentjsTime: moment(new Date()).format('LTS')
   }
+  console.log('ini isi datanya', data)
   modelAddMessage(data)
     .then(result => {
       return response(res, 201, {message: 'Send chat success'}, null)
@@ -29,12 +29,8 @@ exports.addMessage = (req, res, next) => {
 exports.getChatPrivate = (req, res, next) => {
   const {myId} = req
   const {idReceiver} = req.body
-  const {test} = req.body
-  console.log('test aja', test)
-  console.log('idReceiver', idReceiver)
   modelChatPrivate(myId, idReceiver)
     .then((result) => {
-      console.log('ini result di controller', result)
       return response(res, 200, result, null)
     })
     .catch(() => {

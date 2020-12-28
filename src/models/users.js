@@ -46,10 +46,8 @@ exports.modelIdUser = (id) => {
 }
 exports.modelMyProfile = (id) => {
   return new Promise((resolve, reject) => {
-    console.log('ini id', id)
     connection.query(`SELECT * FROM users WHERE id = '${id}'`, (error, result) => {
       if (!error) {
-        console.log('ini hasilnya', result)
         resolve(result)
       } else {
         reject(error)

@@ -16,7 +16,7 @@ const moment = require('moment')
 
 app.use(cors())
 
-app.use(morgan('dev'))
+// app.use(morgan('dev'))
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -31,18 +31,16 @@ const io = socket(server, {
 io.on('connection', (socket) => {
   console.log(`Assalamualaikum boyy ${socket.id}`)
   socket.on('afterLogin', dataUser => {
-    console.log(dataUser)
     socket.join('room :' + dataUser.room)
     socket.broadcast.to('room :' + dataUser.room).emit('sendBack', `BOT : user ${dataUser.username} join to ${dataUser.room} group`)
   })
   socket.on('message', data => {
-    console.log('Ini on', data)
     io.to('room :' + data.room).emit('sendBack', data.message)
   })
   
   socket.on('initialUser', (dataUser) => {
+    console.log(dataUser)
     socket.join(['chat:' + dataUser.idSender + '' + dataUser.idReceiver, 'chat:' + '' + dataUser.idReceiver + dataUser.idSender])
-    console.log('ini initial user', dataUser)
   })
   socket.on('messagePrivate', data => {
     data.status = 'sender'
@@ -55,7 +53,8 @@ io.on('connection', (socket) => {
       idSender: data.idReceiver,
       idReceiver: data.idSender,
       message: data.message,
-      createdAt: moment(new Date()).format('LT')
+      momentjsTime: moment(new Date()).format('LT'),
+      createdAt: new Date()
     }
     modelAddMessage(dataMessage)
   })

@@ -20,7 +20,6 @@ exports.login = (req, res, next) => {
             userId: user.id,
             email: user.email,
           }
-          console.log(payload.userId)
           jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '5h' }, function (err, token) {
             user.token = token
             return response(res, 200, user, null)
@@ -43,7 +42,6 @@ exports.register = (req, res, next) => {
   const { name, email, password } = req.body
   checkEmail(email)
     .then((result) => {
-      console.log(result)
       if (result.length > 0) return response(res, 401, null, {message: 'Email Already exist!!'})
       bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(password, salt, function (err, hash) {
@@ -57,8 +55,7 @@ exports.register = (req, res, next) => {
             createdAt: moment(new Date()).format('LLL')
           }
           insertUser(data)
-            .then(result => {
-              console.log(result)
+            .then(() => {
               return response(res, 201, {message: 'Register success!!'}, null)
             })
         })
