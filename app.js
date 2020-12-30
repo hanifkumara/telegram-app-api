@@ -11,6 +11,7 @@ const router = require('./src/router/index')
 const bodyParser = require('body-parser')
 const { response } = require('./src/helpers/response')
 const { modelAddMessage } = require('./src/models/message')
+const { modelUpdateProfile } = require('./src/models/users')
 const { v4: uuidv4 } = require('uuid')
 const moment = require('moment')
 
@@ -27,39 +28,49 @@ const io = socket(server, {
     origin: '*',
   }
 })
-
 io.on('connection', (socket) => {
-  console.log(`Assalamualaikum boyy ${socket.id}`)
-  socket.on('afterLogin', dataUser => {
-    socket.join('room :' + dataUser.room)
-    socket.broadcast.to('room :' + dataUser.room).emit('sendBack', `BOT : user ${dataUser.username} join to ${dataUser.room} group`)
+  const myId = {}
+  console.log('Status', socket.id)
+  // socket.on('afterLogin', dataUser => {
+  //   socket.join('room :' + dataUser.room)
+  //   socket.broadcast.to('room :' + dataUser.room).emit('sendBack', `BOT : user ${dataUser.username} join to ${dataUser.room} group`)
+  // })
+  // socket.on('message', data => {
+  //   io.to('room :' + data.room).emit('sendBack', data.message)
+  // })
+  socket.on('handleStatus', data => {
+    myId.id = data
+    console.log('pas konek', myId.id)
+    modelUpdateProfile(data, {socketId: 'Online'})
   })
-  socket.on('message', data => {
-    io.to('room :' + data.room).emit('sendBack', data.message)
-  })
-  
   socket.on('initialUser', (dataUser) => {
-    console.log(dataUser)
-    socket.join(['chat:' + dataUser.idSender + '' + dataUser.idReceiver, 'chat:' + '' + dataUser.idReceiver + dataUser.idSender])
+    console.log(dataUser.idReceiver)
+    socket.join('Chat:'+dataUser.idSender)
   })
   socket.on('messagePrivate', data => {
     data.status = 'sender'
-    socket.broadcast.to(`chat:${data.idSender}${data.idReceiver}`).to(`chat:${data.idReceiver}${data.idSender}`).emit('sendBack', data)
+    data.notif = 'toasted'
+    console.log('id to', data.idSender)
+    socket.broadcast.to('Chat:'+data.idReceiver).emit('sendBack', data)
     delete data.status
+    delete data.notif
     socket.emit('sendBack', data)
     const id = uuidv4()
     const dataMessage = {
       id,
-      idSender: data.idReceiver,
-      idReceiver: data.idSender,
+      idSender: data.idSender,
+      idReceiver: data.idReceiver,
       message: data.message,
       momentjsTime: moment(new Date()).format('LT'),
       createdAt: new Date()
     }
     modelAddMessage(dataMessage)
   })
+  socket.emit('logout', socket.id)
   socket.on('disconnect', ()=>{
-    console.log('client terputus')
+    console.log('pas diskonek', myId.id)
+    modelUpdateProfile(myId.id, { socketId: 'Offline' })
+    console.log(`client ${socket.id} terputus`)
   })
 })
 

@@ -15,7 +15,6 @@ exports.addMessage = (req, res, next) => {
     message, 
     momentjsTime: moment(new Date()).format('LTS')
   }
-  console.log('ini isi datanya', data)
   modelAddMessage(data)
     .then(result => {
       return response(res, 201, {message: 'Send chat success'}, null)
