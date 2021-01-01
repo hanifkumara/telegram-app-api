@@ -50,7 +50,7 @@ exports.getMyProfile = (req, res, next) => {
 }
 exports.updateProfile = (req, res, next) => {
   const {myId} = req
-  const {username, phoneNumber, biodata, password} = req.body
+  const {username, phoneNumber, biodata, password, socketId} = req.body
   const data = {}
   if (req.file) {
     data.photo = `${process.env.BASE_URL}/upload/${req.file.filename}`;
@@ -63,7 +63,10 @@ exports.updateProfile = (req, res, next) => {
 	}
 	if (biodata) {
 		data.biodata = req.body.biodata;
-	}
+  }
+  if (socketId) {
+    data.socketId = req.body.socketId
+  }
 	if (!password) {
     delete data.password;
 		modelUpdateProfile(myId, data)

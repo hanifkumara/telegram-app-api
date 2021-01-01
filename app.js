@@ -17,7 +17,7 @@ const moment = require('moment')
 
 app.use(cors())
 
-// app.use(morgan('dev'))
+app.use(morgan('dev'))
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -66,7 +66,10 @@ io.on('connection', (socket) => {
     }
     modelAddMessage(dataMessage)
   })
-  socket.emit('logout', socket.id)
+  // socket.emit('logout', socket.id)
+  socket.on('logout', () => {
+    socket.disconnect()
+  })
   socket.on('disconnect', ()=>{
     console.log('pas diskonek', myId.id)
     modelUpdateProfile(myId.id, { socketId: 'Offline' })

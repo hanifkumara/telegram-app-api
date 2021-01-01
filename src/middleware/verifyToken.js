@@ -18,7 +18,6 @@ exports.verifyToken = (req, res, next) => {
     }
     req.myId = decoded.userId
     req.myEmail = decoded.email
-    console.log('ini apa', decoded.userId)
     next()
   })
 }
