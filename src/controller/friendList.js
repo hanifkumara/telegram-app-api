@@ -5,7 +5,8 @@ const { modelAddFriend, modelGetFriend, modelCheckFriend, modelUnfriend } = requ
 
 exports.getAllFriend = (req, res, next) => {
   const {myId} = req
-  modelGetFriend(myId)
+  const {name} = req.query || ''
+  modelGetFriend(myId, name)
     .then((result) => {
       return response(res, 200, result, null)
     })

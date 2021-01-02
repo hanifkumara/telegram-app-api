@@ -16,9 +16,12 @@ exports.getAllUsers = (req, res, next) => {
 
 exports.listUsers = (req, res, next) => {
   const {myId} = req
-  const {name} = req.query
+  const {name} = req.query || ''
   modelListUsers(myId, name)
     .then((result) => {
+      if (result.length === 0) {
+        return response(res, 200, null, {message: 'user not found'})
+      }
       return response(res, 200, result, null)
     })
     .catch(() => {
