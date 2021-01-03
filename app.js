@@ -12,6 +12,7 @@ const bodyParser = require('body-parser')
 const { response } = require('./src/helpers/response')
 const { modelAddMessage } = require('./src/models/message')
 const { modelUpdateProfile } = require('./src/models/users')
+const { modelAddMessageRoom } = require('./src/models/messageRoom')
 const { v4: uuidv4 } = require('uuid')
 const moment = require('moment')
 
@@ -44,13 +45,11 @@ io.on('connection', (socket) => {
     modelUpdateProfile(data, {socketId: 'Online'})
   })
   socket.on('initialUser', (dataUser) => {
-    console.log(dataUser.idReceiver)
     socket.join('Chat:'+dataUser.idSender)
   })
   socket.on('messagePrivate', data => {
     data.status = 'sender'
     data.notif = 'toasted'
-    console.log('id to', data.idSender)
     socket.broadcast.to('Chat:'+data.idReceiver).emit('sendBack', data)
     delete data.status
     delete data.notif
@@ -65,6 +64,26 @@ io.on('connection', (socket) => {
       createdAt: new Date()
     }
     modelAddMessage(dataMessage)
+  })
+  socket.on('initialRoom', dataRoom => {
+    console.log('ini data user', dataRoom)
+    socket.join('Room:'+dataRoom)
+  })
+  socket.on('messageRoom', dataRoom => {
+    console.log('ini dataRoom', dataRoom)
+    dataRoom.notif = 'toasted'
+    socket.broadcast.to('Room:' + dataRoom.idRoom).emit('sendBackRoom', dataRoom)
+    delete dataRoom.notif
+    socket.emit('sendBackRoom', dataRoom)
+    const id = uuidv4()
+    const data = {
+      id,
+      idRoom: dataRoom.idRoom,
+      idUser: dataRoom.idUser,
+      message: dataRoom.message,
+      createdAt: new Date()
+    }
+    modelAddMessageRoom(data)
   })
   // socket.emit('logout', socket.id)
   socket.on('logout', () => {
