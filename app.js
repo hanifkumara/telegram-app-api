@@ -70,10 +70,11 @@ io.on('connection', (socket) => {
     socket.join('Room:'+dataRoom)
   })
   socket.on('messageRoom', dataRoom => {
-    console.log('ini dataRoom', dataRoom)
     dataRoom.notif = 'toasted'
+    console.log(dataRoom.nameRoom)
     socket.broadcast.to('Room:' + dataRoom.idRoom).emit('sendBackRoom', dataRoom)
     delete dataRoom.notif
+    console.log(dataRoom)
     socket.emit('sendBackRoom', dataRoom)
     const id = uuidv4()
     const data = {

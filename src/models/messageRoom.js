@@ -36,7 +36,7 @@ exports.modelGroupChat = (myId) => {
 }
 exports.modelDetailGroup = (idRoom) => {
   return new Promise((resolve, reject) => {
-    connection.query(`SELECT member.*, rooms.name as nameRoom, rooms.photo as photoRoom, users.name as nameMember FROM member INNER JOIN rooms ON member.idRoom = rooms.id INNER JOIN users ON member.idUser = users.id WHERE member.idRoom = ${idRoom}`, (error, result) => {
+    connection.query(`SELECT member.*, rooms.name as nameRoom, rooms.photo as photoRoom, users.name as nameMember, users.photo as photoMember, users.phoneNumber as phoneMember FROM member INNER JOIN rooms ON member.idRoom = rooms.id INNER JOIN users ON member.idUser = users.id WHERE member.idRoom = '${idRoom}'`, (error, result) => {
       if (!error) {
         resolve(result)
       } else {
@@ -45,3 +45,41 @@ exports.modelDetailGroup = (idRoom) => {
     })
   })
 }
+exports.modelAddRoom = (data) => {
+  return new Promise((resolve, reject) => {
+    connection.query('INSERT INTO rooms SET ?', data, (error, result) => {
+      if (!error) {
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}
+exports.modelAddMember = data => {
+  return new Promise((resolve, reject) => {
+    console.log('data add member', data)
+    connection.query('INSERT INTO member SET ?', data, (error, result) => {
+      console.log('result', result)
+      if (!error) {
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}
+exports.modelDeleteMember = (data) => {
+  return new Promise((resolve, reject) => {
+    console.log('data add member', data)
+    connection.query(`DELETE FROM member WHERE idRoom = '${data.idRoom}' AND idUser = '${data.idUser}'`, (error, result) => {
+      console.log('result', result)
+      if (!error) {
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}
+// 

@@ -1,5 +1,5 @@
 const { response } = require('../helpers/response')
-const { modelAddMessageRoom, modelChatRoom, modelGroupChat, modelDetailGroup } = require('../models/messageRoom')
+const { modelAddMessageRoom, modelChatRoom, modelGroupChat, modelDetailGroup, modelAddRoom, modelAddMember, modelDeleteMember } = require('../models/messageRoom')
 const { v4: uuidv4 } = require('uuid')
 const createError = require('http-errors')
 
@@ -56,4 +56,53 @@ exports.getChatRoom = (req, res, next) => {
       const error = createError.InternalServerError()
       return next(error)
     })
+}
+
+exports.addRoom = (req, res, next) => {
+  const {myId} = req
+  const {name} = req.body
+  const idRoom = uuidv4()
+  const idMember = uuidv4()
+  data = {
+    id: idRoom,
+    name,
+    photo: 'https://placekitten.com/310/310'
+  }
+  modelAddRoom(data)
+    .then((result) => {
+      modelAddMember({ id: idMember, idRoom: idRoom, idUser: myId})
+       .then(() => {
+        return response(res, 200, {message: 'Create Group success'}, null)
+       })
+    })
+    .catch(() => {
+      const error = createError.InternalServerError()
+      return next(error)
+    })
+}
+
+exports.addMember = (req, res, next) => {
+  const {idRoom, idUser} = req.body
+  const id = uuidv4()
+  modelAddMember({ id, idRoom, idUser })
+    .then(() => {
+      return response(res, 200, {message: 'Add member success'}, null)
+    })
+    .catch(() => {
+      const error = createError.InternalServerError()
+      return next(error)
+    })
+}
+
+exports.deleteMember = (req, res, next) => {
+  const {idRoom, idUser} = req.query
+  console.log(idRoom, idUser)
+  modelDeleteMember({ idRoom, idUser })
+    .then(() => {
+      return response(res, 200, { message: 'Delete member success' }, null)
+    })
+    .catch((err) => {
+      const error = createError.InternalServerError()
+      return next(error)
+    });
 }
