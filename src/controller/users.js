@@ -7,6 +7,9 @@ const bcrypt = require('bcryptjs');
 exports.getAllUsers = (req, res, next) => {
   modelAllUsers()
     .then((result) => {
+      result.map(value => {
+        delete value.password
+      })
       return response(res, 200, result, null)
     }).catch(() => {
       const error = createError.InternalServerError()

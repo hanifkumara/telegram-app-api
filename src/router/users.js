@@ -5,7 +5,7 @@ const {verifyToken} = require('../middleware/verifyToken')
 const { uploadMulter } = require('../middleware/upload')
 
 route
-  .get('/', verifyToken, getAllUsers)
+  .get('/', getAllUsers)
   .get('/list-users', verifyToken, listUsers)
   .get('/myprofile', verifyToken, getMyProfile)
   .get('/:id', verifyToken, getIdUser)
