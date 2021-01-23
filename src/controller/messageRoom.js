@@ -1,5 +1,5 @@
 const { response } = require('../helpers/response')
-const { modelAddMessageRoom, modelChatRoom, modelGroupChat, modelDetailGroup, modelAddRoom, modelAddMember, modelDeleteMember } = require('../models/messageRoom')
+const { modelAddMessageRoom, modelChatRoom, modelGroupChat, modelDetailGroup, modelAddRoom, modelAddMember, modelDeleteMember, modelDeleteRoom } = require('../models/messageRoom')
 const { v4: uuidv4 } = require('uuid')
 const createError = require('http-errors')
 
@@ -96,10 +96,24 @@ exports.addMember = (req, res, next) => {
 
 exports.deleteMember = (req, res, next) => {
   const {idRoom, idUser} = req.query
-  console.log(idRoom, idUser)
   modelDeleteMember({ idRoom, idUser })
     .then(() => {
       return response(res, 200, { message: 'Delete member success' }, null)
+    })
+    .catch((err) => {
+      const error = createError.InternalServerError()
+      return next(error)
+    });
+}
+
+exports.deleteRoom = (req, res, next) => {
+  const {id} = req.params
+  modelDeleteRoom(id)
+    .then((result) => {
+      if (result.affectedRows === 0) {
+        return response(res, 401, null, { message: 'id not found' })
+      }
+      return response(res, 200, { message: 'Delete group chat success' }, null)
     })
     .catch((err) => {
       const error = createError.InternalServerError()

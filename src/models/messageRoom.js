@@ -2,7 +2,6 @@ const connection = require('../config/database')
 
 exports.modelAddMessageRoom = (data) => {
   return new Promise((resolve, reject) => {
-    console.log(data)
     connection.query('INSERT INTO message_room SET ?', data, (error, result) => {
       if (!error) {
         resolve(result)
@@ -58,9 +57,7 @@ exports.modelAddRoom = (data) => {
 }
 exports.modelAddMember = data => {
   return new Promise((resolve, reject) => {
-    console.log('data add member', data)
     connection.query('INSERT INTO member SET ?', data, (error, result) => {
-      console.log('result', result)
       if (!error) {
         resolve(result)
       } else {
@@ -71,9 +68,7 @@ exports.modelAddMember = data => {
 }
 exports.modelDeleteMember = (data) => {
   return new Promise((resolve, reject) => {
-    console.log('data add member', data)
     connection.query(`DELETE FROM member WHERE idRoom = '${data.idRoom}' AND idUser = '${data.idUser}'`, (error, result) => {
-      console.log('result', result)
       if (!error) {
         resolve(result)
       } else {
@@ -82,4 +77,15 @@ exports.modelDeleteMember = (data) => {
     })
   })
 }
-// 
+exports.modelDeleteRoom = (id) => {
+  return new Promise((resolve, reject) => {
+    console.log(id)
+    connection.query(`DELETE FROM rooms WHERE id = '${id}'`, (error, result) => {
+      if (!error) {
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}

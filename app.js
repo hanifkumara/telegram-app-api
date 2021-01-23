@@ -18,7 +18,7 @@ const moment = require('moment')
 
 app.use(cors())
 
-app.use(morgan('dev'))
+// app.use(morgan('dev'))
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -66,16 +66,13 @@ io.on('connection', (socket) => {
     modelAddMessage(dataMessage)
   })
   socket.on('initialRoom', dataRoom => {
-    console.log('ini data user', dataRoom)
-    socket.join('Room:'+dataRoom)
+    socket.join('Room:' + dataRoom)
   })
   socket.on('messageRoom', dataRoom => {
     dataRoom.notif = 'toasted'
-    console.log(dataRoom.nameRoom)
+    console.log('ini data room', dataRoom)
     socket.broadcast.to('Room:' + dataRoom.idRoom).emit('sendBackRoom', dataRoom)
     delete dataRoom.notif
-    console.log(dataRoom)
-    socket.emit('sendBackRoom', dataRoom)
     const id = uuidv4()
     const data = {
       id,
@@ -85,9 +82,9 @@ io.on('connection', (socket) => {
       createdAt: new Date()
     }
     modelAddMessageRoom(data)
+    socket.emit('sendBackRoom', dataRoom)
   })
-  // socket.emit('logout', socket.id)
-  socket.on('logout', () => {
+  socket.on('logout', userId => {
     socket.disconnect()
   })
   socket.on('disconnect', ()=>{
