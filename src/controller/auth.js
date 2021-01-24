@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const { checkEmail, insertUser } = require('../models/auth')
 const moment = require('moment')
 const createError = require('http-errors')
+const { sendEmail } = require('../helpers/email')
 
 exports.login = (req, res, next) => {
   const {email, password} = req.body
@@ -12,6 +13,7 @@ exports.login = (req, res, next) => {
     .then((result) => {
       if (result.length > 0) {
         const user = result[0]
+        if (user.confirmed !== 1) return response(res, 401, null, { message: "you haven't done ameil verification" })
         bcrypt.compare(password, user.password, function (err, resCheck) {
           if (!resCheck) return response(res, 401, null, { message: 'Password Wrong!!' })
           delete user.password
@@ -54,6 +56,16 @@ exports.register = (req, res, next) => {
             photo: 'https://placekitten.com/500/500',
             createdAt: moment(new Date()).format('LLL')
           }
+          jwt.sign({user: data.id}, process.env.SECRET_KEY, {expiresIn: '5h'}, function (err, token) {
+            const url = `${process.env.BASE_URL_FRONTEND}/confirmation-email/${token}`
+            sendEmail(email, url)
+              .then(res => {
+                console.log(res)
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          })
           insertUser(data)
             .then(() => {
               return response(res, 201, {message: 'Register success!!'}, null)

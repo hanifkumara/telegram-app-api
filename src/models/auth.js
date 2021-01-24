@@ -23,3 +23,14 @@ exports.insertUser = (data) => {
     })
   })
 }
+exports.verifyUserModel = (id) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`UPDATE users SET confirmed = 1 WHERE id = '${id}'`, (error, result) => {
+      if (!error) {
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}
