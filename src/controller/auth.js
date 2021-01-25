@@ -3,9 +3,10 @@ const { response } = require('../helpers/response')
 const { v4: uuidv4 } = require('uuid')
 const jwt = require('jsonwebtoken')
 const { checkEmail, insertUser } = require('../models/auth')
+const { modelUpdateProfile } = require('../models/users')
 const moment = require('moment')
 const createError = require('http-errors')
-const { sendEmail } = require('../helpers/email')
+const { sendEmail, emailForgotPassword } = require('../helpers/email')
 
 exports.login = (req, res, next) => {
   const {email, password} = req.body
@@ -77,4 +78,57 @@ exports.register = (req, res, next) => {
       return next(error)
     })
 
+}
+
+exports.forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body
+    const resEmail = await checkEmail(email)
+    console.log('cek email', resEmail)
+    if (resEmail.length < 1) {
+      return response(res, 401, null, { message: 'Email not found' })
+    } else {
+      console.log('ini idnya', resEmail[0].id)
+      jwt.sign({ myId: resEmail[0].id }, process.env.SECRET_KEY, { expiresIn: '1d' }, (err, emailToken) => {
+        const url = `${process.env.BASE_URL_FRONTEND}/auth/create-password/${emailToken}`;
+        emailForgotPassword(email, url)
+        return response(res, 201, { token: emailToken, message: 'Send email success. Pelase check your email now' }, null)
+      })
+    }
+  } catch (err) {
+    const error = createError.InternalServerError()
+    return next(error)
+  }
+}
+
+exports.resetPassword = (req, res, next) => {
+  try {
+    const { password } = req.body
+    console.log(password)
+    const authorization = req.headers.authorization
+    if (!authorization) return response(res, 201, null, {message: 'You not have token!!'})
+    let token = authorization.split(' ')
+    token = token[1]
+    jwt.verify(token, process.env.SECRET_KEY, function (err, decoded) {
+      if (err) {
+        if (err.name === 'JsonWebTokenError') {
+          return response(res, 201, null, { message: 'Invalid Token!!' })
+        } else if (err.name === 'TokenExpiredError') {
+          return response(res, 201, null, {message: 'Token expired'})
+        }
+      }
+      bcrypt.genSalt(10, function (err, salt) {
+        bcrypt.hash(password, salt, function (err, hash) {
+          modelUpdateProfile(decoded.myId, {password: hash})
+            .then(() => {
+              console.log(decoded)
+              return response(res, 201, { message: 'Reset password success!!' }, null)
+            })
+        })
+      })
+      console.log(decoded)
+    })
+  } catch (error) {
+    return response(res, 201, null, { message: 'Something went wrong!!' })
+  }
 }
