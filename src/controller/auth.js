@@ -14,7 +14,7 @@ exports.login = (req, res, next) => {
     .then((result) => {
       if (result.length > 0) {
         const user = result[0]
-        if (user.confirmed !== 1) return response(res, 401, null, { message: "you haven't done ameil verification" })
+        if (user.confirmed !== 1) return response(res, 401, null, { message: "you haven't done email verification" })
         bcrypt.compare(password, user.password, function (err, resCheck) {
           if (!resCheck) return response(res, 401, null, { message: 'Password Wrong!!' })
           delete user.password

@@ -89,3 +89,14 @@ exports.modelDeleteRoom = (id) => {
     })
   })
 }
+exports.modelCheckMember = (idRoom, idUser) => {
+  return new Promise((resolve, reject) => {
+    connection.query(`SELECT * FROM member WHERE idRoom = '${idRoom}' AND idUser = '${idUser}'`, (error, result) => {
+      if (!error) {
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}

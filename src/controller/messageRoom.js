@@ -1,5 +1,5 @@
 const { response } = require('../helpers/response')
-const { modelAddMessageRoom, modelChatRoom, modelGroupChat, modelDetailGroup, modelAddRoom, modelAddMember, modelDeleteMember, modelDeleteRoom } = require('../models/messageRoom')
+const { modelAddMessageRoom, modelChatRoom, modelGroupChat, modelDetailGroup, modelAddRoom, modelAddMember, modelDeleteMember, modelDeleteRoom, modelCheckMember } = require('../models/messageRoom')
 const { v4: uuidv4 } = require('uuid')
 const createError = require('http-errors')
 
@@ -84,9 +84,13 @@ exports.addRoom = (req, res, next) => {
 exports.addMember = (req, res, next) => {
   const {idRoom, idUser} = req.body
   const id = uuidv4()
-  modelAddMember({ id, idRoom, idUser })
-    .then(() => {
-      return response(res, 200, {message: 'Add member success'}, null)
+  modelCheckMember(idRoom, idUser)
+    .then(result => {
+      if (result.length > 0) return response(res, 401, null, { message: 'User already join' })
+        modelAddMember({ id, idRoom, idUser })
+        .then(() => {
+          return response(res, 200, {message: 'Add member success'}, null)
+        })
     })
     .catch(() => {
       const error = createError.InternalServerError()
