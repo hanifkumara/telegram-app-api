@@ -60,17 +60,16 @@ exports.register = (req, res, next) => {
           jwt.sign({user: data.id}, process.env.SECRET_KEY, {expiresIn: '5h'}, function (err, token) {
             const url = `${process.env.BASE_URL_FRONTEND}/confirmation-email/${token}`
             sendEmail(email, url)
-              .then(res => {
-                console.log(res)
+              .then(() => {
+                insertUser(data)
+                  .then(() => {
+                    return response(res, 201, {message: 'Register success!!', token}, null)
+                  })
               })
               .catch(err => {
-                console.log(err)
+                return response(res, 401, null, {message: 'Something went wrong!!'})
               })
           })
-          insertUser(data)
-            .then(() => {
-              return response(res, 201, {message: 'Register success!!'}, null)
-            })
         })
       })
     }).catch(() => {

@@ -1,8 +1,18 @@
 const { response } = require('../helpers/response')
-const { modelAddMessageRoom, modelChatRoom, modelGroupChat, modelDetailGroup, modelAddRoom, modelAddMember, modelDeleteMember, modelDeleteRoom, modelCheckMember } = require('../models/messageRoom')
+const { modelAllRoom, modelAddMessageRoom, modelChatRoom, modelGroupChat, modelDetailGroup, modelAddRoom, modelAddMember, modelDeleteMember, modelDeleteRoom, modelCheckMember } = require('../models/messageRoom')
 const { v4: uuidv4 } = require('uuid')
 const createError = require('http-errors')
 
+exports.getAllRoom = (req, res, next) => {
+  modelAllRoom()
+    .then(result => {
+      return response(res, 201, result, null)
+    })
+    .catch(() => {
+      const error = createError.InternalServerError()
+      return next(error)
+    })
+}
 exports.getDetailGroup = (req, res, next) => {
   const idRoom = req.query.idRoom
   modelDetailGroup(idRoom)

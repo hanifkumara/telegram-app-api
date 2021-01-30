@@ -1,5 +1,16 @@
 const connection = require('../config/database')
 
+exports.modelAllRoom = () => {
+  return new Promise((resolve, reject) => {
+    connection.query('SELECT * FROM rooms', (error, result) => {
+      if (!error) {
+        resolve(result)
+      } else {
+        reject(error)
+      }
+    })
+  })
+}
 exports.modelAddMessageRoom = (data) => {
   return new Promise((resolve, reject) => {
     connection.query('INSERT INTO message_room SET ?', data, (error, result) => {

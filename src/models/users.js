@@ -71,8 +71,9 @@ exports.deletePhoto = (id) => {
     connection.query(`SELECT photo FROM users WHERE id = ?`, id, (error, result) => {
       if (!error) {
         if (result[0].photo !== 'https://placekitten.com/500/500') {
-          const image = result[0].photo.split('/')[5]
-          const path = `image/${image}`
+          const image = result[0].photo.split('/')[4]
+          console.log('ini image', image)
+          const path = `./image/${image}`
           fs.unlink(path, (err) => {
             if (err) {
               resolve(err)

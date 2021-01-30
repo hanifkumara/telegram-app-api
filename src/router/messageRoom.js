@@ -1,9 +1,10 @@
 const express = require('express')
 const { verifyToken } = require('../middleware/verifyToken')
 const route = express.Router()
-const { addMessageRoom, getChatRoom, getGroupChat, getDetailGroup, addRoom, addMember, deleteMember, deleteRoom } = require('../controller/messageRoom')
+const { getAllRoom, addMessageRoom, getChatRoom, getGroupChat, getDetailGroup, addRoom, addMember, deleteMember, deleteRoom } = require('../controller/messageRoom')
 
 route
+  .get('/all-room', getAllRoom)
   .get('/chat-room', verifyToken, getChatRoom)
   .get('/group-chat', verifyToken, getGroupChat)
   .get('/detail-group', verifyToken, getDetailGroup)
