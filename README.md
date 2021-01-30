@@ -13,11 +13,11 @@ This API is for Telegram App where private chat or group chat in realtime
 
 ## Installation
 
-Clone this repository and then use the package manager npm to install dependencies.
+Clone this repository and then use the package manager yarn to install dependencies.
 
 
 ```bash
-npm install
+yarn install
 ```
 
 ## Setup .env example
@@ -46,13 +46,13 @@ SECRET_KEY= jsdkfjkldsf@sdflkal$kfldfgp
 Development mode
 
 ```bash
-npm run dev
+yarn run dev
 ```
 
 Deploy mode
 
 ```bash
-npm start
+yarn start
 ```
 
 ## REST API
