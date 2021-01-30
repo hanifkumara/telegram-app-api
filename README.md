@@ -26,14 +26,18 @@ Create .env file in your root project folder.
 
 ```env
 
-PORT=8000
-DB_HOST=localhost
-DB_USER =root
-DB_PASSWORD=your_password
-DB_NAME=hiring_channel
-AUTH_SECRET=YOUR_SECRET
-AUTH_EXPIRES=1h
-UPLOADED_IMG_PATH=your/public-folder/image-path
+DB_HOST= localhost
+DB_USER= root
+DB_PASS= 
+DB_NAME= db_telegram_app
+PORT= 5000
+BASE_URL= http://localhost:5000
+BASE_URL_FRONTEND= http://localhost:8080
+
+EMAIL_USERNAME= email@gmail.com
+EMAIL-PASSWORD= email123#
+
+SECRET_KEY= jsdkfjkldsf@sdflkal$kfldfgp
 
 ```
 
