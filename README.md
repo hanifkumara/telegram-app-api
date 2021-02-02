@@ -1,5 +1,11 @@
 # Telegram App Api
 
+<p align="center">
+  <p align="center">
+    <image align="center" width="200" src='./screenshots/logo.PNG' />
+  </p>
+</p>
+
 This API is for Telegram App where private chat or group chat in realtime
 
 ## Built With
@@ -65,6 +71,18 @@ or </br>
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+## Project Related
+
+[https://github.com/hanifkumara/telegram-app](https://github.com/hanifkumara/telegram-app)
+
+## Contact
+
+My Email : hanifkumara00@gmail.com
+
+LinkedIn : [https://www.linkedin.com/in/hanifkumara](https://www.linkedin.com/in/hanifkumara/)
+
+Project Link: [https://github.com/hanifkumara/zwallet-restfull-api](https://github.com/hanifkumara/telegram-app-api)
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
