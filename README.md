@@ -13,11 +13,11 @@ This API is for Telegram App where private chat or group chat in realtime
 
 ## Installation
 
-Clone this repository and then use the package manager npm to install dependencies.
+Clone this repository and then use the package manager yarn to install dependencies.
 
 
 ```bash
-npm install
+yarn install
 ```
 
 ## Setup .env example
@@ -26,14 +26,18 @@ Create .env file in your root project folder.
 
 ```env
 
-PORT=8000
-DB_HOST=localhost
-DB_USER =root
-DB_PASSWORD=your_password
-DB_NAME=hiring_channel
-AUTH_SECRET=YOUR_SECRET
-AUTH_EXPIRES=1h
-UPLOADED_IMG_PATH=your/public-folder/image-path
+DB_HOST= localhost
+DB_USER= root
+DB_PASS= 
+DB_NAME= db_telegram_app
+PORT= 5000
+BASE_URL= http://localhost:5000
+BASE_URL_FRONTEND= http://localhost:8080
+
+EMAIL_USERNAME= email@gmail.com
+EMAIL-PASSWORD= email123#
+
+SECRET_KEY= jsdkfjkldsf@sdflkal$kfldfgp
 
 ```
 
@@ -42,20 +46,20 @@ UPLOADED_IMG_PATH=your/public-folder/image-path
 Development mode
 
 ```bash
-npm run dev
+yarn run dev
 ```
 
 Deploy mode
 
 ```bash
-npm start
+yarn start
 ```
 
 ## REST API
 
-You can view my Postman collection [here](https://www.getpostman.com/collections/65e37e55e8c3d1a69d55) </br>
+You can view my Postman collection [here](https://documenter.getpostman.com/view/14394222/TW6xp8vK) </br>
 or </br>
-[![run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/65e37e55e8c3d1a69d55)
+[![run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/7218a4a5671aba0166c9)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
