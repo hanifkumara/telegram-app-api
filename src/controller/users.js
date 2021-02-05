@@ -56,7 +56,7 @@ exports.getMyProfile = (req, res, next) => {
 }
 exports.updateProfile = (req, res, next) => {
   const {myId} = req
-  const { username, phoneNumber, biodata, password, socketId, locationLat, locationLng} = req.body
+  const { username, phoneNumber, biodata, password, socketId, locationLat, locationLng, userGuide } = req.body
   const data = {}
   if (req.file) {
     data.photo = `${process.env.BASE_URL}/upload/${req.file.filename}`;
@@ -78,6 +78,9 @@ exports.updateProfile = (req, res, next) => {
   }
   if (locationLng) {
     data.locationLng = req.body.locationLng
+  }
+  if (userGuide) {
+    data.userGuide = req.body.userGuide
   }
 	if (!password) {
     delete data.password;
