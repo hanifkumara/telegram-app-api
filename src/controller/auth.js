@@ -45,7 +45,7 @@ exports.register = (req, res, next) => {
   const { name, email, password } = req.body
   checkEmail(email)
     .then((result) => {
-      // if (result.length > 0) return response(res, 401, null, {message: 'Email Already exist!!'})
+      if (result.length > 0) return response(res, 401, null, {message: 'Email Already exist!!'})
       bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(password, salt, function (err, hash) {
           moment.locale(id)
