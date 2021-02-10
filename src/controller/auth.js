@@ -45,7 +45,7 @@ exports.register = (req, res, next) => {
   const { name, email, password } = req.body
   checkEmail(email)
     .then((result) => {
-      if (result.length > 0) return response(res, 401, null, {message: 'Email Already exist!!'})
+      // if (result.length > 0) return response(res, 401, null, {message: 'Email Already exist!!'})
       bcrypt.genSalt(10, function (err, salt) {
         bcrypt.hash(password, salt, function (err, hash) {
           moment.locale(id)
@@ -67,6 +67,7 @@ exports.register = (req, res, next) => {
                   })
               })
               .catch(err => {
+                console.log(err)
                 return response(res, 401, null, {message: 'Something went wrong!!'})
               })
           })
@@ -88,7 +89,7 @@ exports.forgotPassword = async (req, res, next) => {
       return response(res, 401, null, { message: 'Email not found' })
     } else {
       console.log('ini idnya', resEmail[0].id)
-      jwt.sign({ myId: resEmail[0].id }, process.env.SECRET_KEY, { expiresIn: '1d' }, (err, emailToken) => {
+      jwt.sign({ myId: resEmail[0].id }, process.env.SECRET_KEY, { expiresIn: '5h' }, (err, emailToken) => {
         const url = `${process.env.BASE_URL_FRONTEND}/auth/create-password/${emailToken}`;
         emailForgotPassword(email, url)
         return response(res, 201, { token: emailToken, message: 'Send email success. Pelase check your email now' }, null)
