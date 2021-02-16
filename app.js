@@ -31,7 +31,7 @@ const io = socket(server, {
 })
 io.on('connection', (socket) => {
   const myId = {}
-  console.log('Status', socket.id)
+  console.log('user connect', socket.id)
   // socket.on('afterLogin', dataUser => {
   //   socket.join('room :' + dataUser.room)
   //   socket.broadcast.to('room :' + dataUser.room).emit('sendBack', `BOT : user ${dataUser.username} join to ${dataUser.room} group`)
@@ -88,9 +88,9 @@ io.on('connection', (socket) => {
     socket.disconnect()
   })
   socket.on('disconnect', ()=>{
-    console.log('pas diskonek', myId.id)
+    console.log('user with id '+myId.id+' disconnect')
     modelUpdateProfile(myId.id, { socketId: 'Offline' })
-    console.log(`client ${socket.id} terputus`)
+    console.log(`client ${socket.id} disconnect`)
   })
 })
 
